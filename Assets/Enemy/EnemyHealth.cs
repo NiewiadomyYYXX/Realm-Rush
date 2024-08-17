@@ -7,9 +7,16 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] int maxHP = 5;
     int HP = 0;
 
+    Enemy enemy;
+
     void OnEnable()
     {
         HP = maxHP;
+    }
+
+    void Start()
+    {
+        enemy = GetComponent<Enemy>();
     }
 
     void Update()
@@ -28,6 +35,7 @@ public class EnemyHealth : MonoBehaviour
         if (HP <= 0)
         {
             gameObject.SetActive(false);
+            enemy.RewardGold();
         }
     }
 }
