@@ -7,7 +7,7 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] int maxHP = 5;
     int HP = 0;
 
-    void Start()
+    void OnEnable()
     {
         HP = maxHP;
     }
@@ -27,7 +27,7 @@ public class EnemyHealth : MonoBehaviour
         HP--;
         if (HP <= 0)
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }
