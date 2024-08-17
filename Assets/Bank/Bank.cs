@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class Bank : MonoBehaviour
 {
@@ -11,13 +12,18 @@ public class Bank : MonoBehaviour
 
     public int CurrentBalance { get { return currentBalance; } }
 
+    [SerializeField] TextMeshProUGUI displayBalance;
+
     void Awake()
     {
-        currentBalance = startBal;    
+        currentBalance = startBal;
+        UpdateDisplay();
     }
 
     public void Deposit(int amount)
-    {        
+    {
+        UpdateDisplay();
+
         currentBalance += Mathf.Abs(amount);
     }
 
@@ -25,11 +31,18 @@ public class Bank : MonoBehaviour
     {
         currentBalance -= Mathf.Abs(amount);
 
+        UpdateDisplay();
+
         if (currentBalance < 0)
         {
             ReloadScene();
         }
 
+    }
+
+    void UpdateDisplay()
+    {
+        displayBalance.text = "Gold: " + currentBalance;
     }
 
     void ReloadScene()
