@@ -6,7 +6,7 @@ using TMPro;
 
 public class Bank : MonoBehaviour
 {
-    [SerializeField] int startBal = 150;
+    [SerializeField] int startBal = 225;
     
     [SerializeField] int currentBalance;
 
