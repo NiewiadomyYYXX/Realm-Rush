@@ -33,8 +33,6 @@ public class Pathfinder : MonoBehaviour
             grid = gridMgmt.Grid;
             startNode = grid[startCoordinantes];
             endNode = grid[endCoordinantes];
-            startNode.isWalkable = true;
-            endNode.isWalkable = true;
         }
     }
 
@@ -79,7 +77,9 @@ public class Pathfinder : MonoBehaviour
 
     void BreadthFirstSearch()
     {
-        gridMgmt.ResetNodes();
+        startNode.isWalkable = true;
+        endNode.isWalkable = true;
+
         frontier.Clear();
         reached.Clear();
 
