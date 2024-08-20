@@ -7,7 +7,11 @@ using UnityEngine;
 public class Pathfinder : MonoBehaviour
 {
     [SerializeField] Vector2Int startCoordinantes;
+    public Vector2Int StartCoordinates { get { return startCoordinantes; } }
+
     [SerializeField] Vector2Int endCoordinantes;
+    public Vector2Int EndCoordinates { get { return endCoordinantes; } }
+
 
     Node startNode;
     Node endNode;
@@ -27,14 +31,15 @@ public class Pathfinder : MonoBehaviour
         if (gridMgmt != null)
         {
             grid = gridMgmt.Grid;
+            startNode = grid[startCoordinantes];
+            endNode = grid[endCoordinantes];
+            startNode.isWalkable = true;
+            endNode.isWalkable = true;
         }
     }
 
     void Start()
     {
-        startNode = gridMgmt.Grid[startCoordinantes];
-        endNode = gridMgmt.Grid[endCoordinantes];
-
         GetNewPath();
     }
 

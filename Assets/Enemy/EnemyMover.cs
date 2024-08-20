@@ -5,16 +5,25 @@ using UnityEngine;
 [RequireComponent(typeof(Enemy))]
 public class EnemyMover : MonoBehaviour
 {
-    [SerializeField] List<Tile> path = new List<Tile>();
     [SerializeField] [Range(0f, 5f)] float speed = 1f;
-
+    
+    List<Node> path = new List<Node>();
     Enemy enemy;
+
+    GridManager grid;
+    Pathfinder pathfinder;
 
     void OnEnable()
     {
         FindPath();
         ReturnToStart();
         StartCoroutine(FollowPath());
+    }
+
+    void Awake()
+    {
+        grid = FindAnyObjectByType<GridManager>();
+        pathfinder = FindAnyObjectByType<Pathfinder>();
     }
 
     void Start()
@@ -25,26 +34,20 @@ public class EnemyMover : MonoBehaviour
     void FindPath()
     {
         path.Clear();
-
-        GameObject parent = GameObject.FindGameObjectWithTag("Path");
-
-        foreach (Transform child in parent.transform)
-        {
-            path.Add(child.GetComponent<Tile>());
-        }
+        path = pathfinder.GetNewPath();
     }
 
     void ReturnToStart()
     {
-        transform.position = path[0].transform.position;
+        transform.position = grid.GetPositionFromCoordinates(pathfinder.StartCoordinates);
     }
 
     IEnumerator FollowPath()
     {
-        foreach (Tile waypoint in path)
+        for(int i = 0; i < path.Count; i++)
         {
             Vector3 startPos = transform.position;
-            Vector3 endPos = waypoint.transform.position;
+            Vector3 endPos = grid.GetPositionFromCoordinates(path[i].coordinates);
             float travelPercent = 0f;
 
             transform.LookAt(endPos);
