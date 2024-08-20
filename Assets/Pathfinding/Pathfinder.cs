@@ -6,10 +6,19 @@ using UnityEngine;
 
 public class Pathfinder : MonoBehaviour
 {
-    [SerializeField] Node currentSearchNode;
+    [SerializeField] Vector2Int startCoordinantes;
+    [SerializeField] Vector2Int endCoordinantes;
+
+    Node startNode;
+    Node endNode;
+    Node currentSearchNode;
+
+    Queue<Node> frontier = new Queue<Node>(); 
+    Dictionary<Vector2Int, Node> reached = new Dictionary<Vector2Int, Node>();
+
     Vector2Int[] directions = { Vector2Int.right, Vector2Int.left, Vector2Int.up, Vector2Int.down };
     GridManager gridMgmt;
-    Dictionary<Vector2Int, Node> grid;
+    Dictionary<Vector2Int, Node> grid = new Dictionary<Vector2Int, Node>();
 
     void Awake()
     {
@@ -19,11 +28,14 @@ public class Pathfinder : MonoBehaviour
         {
             grid = gridMgmt.Grid;
         }
+
+        startNode = new Node(startCoordinantes, true);
+        endNode = new Node(endCoordinantes, true);
     }
 
     void Start()
     {
-        ExploreNeighbors();
+        BreadthFirstSearch();
     }
 
     void ExploreNeighbors()
@@ -38,13 +50,37 @@ public class Pathfinder : MonoBehaviour
             {
                 neighbors.Add(grid[neighborCoords]);
 
-                //TODO: Remove after testing
-                grid[neighborCoords].isExplored = true;
-                grid[currentSearchNode.coordinates].isPath = true;
-
             }
 
         }
 
+        foreach (Node neighbor in neighbors)
+        {
+            if (!reached.ContainsKey(neighbor.coordinates) && neighbor.isWalkable)
+            {
+                reached.Add(neighbor.coordinates, neighbor);
+                frontier.Enqueue(neighbor);
+            }
+        }
+
+    }
+
+    void BreadthFirstSearch()
+    {
+        bool isRunning = true;
+
+        frontier.Enqueue(startNode);
+        reached.Add(startCoordinantes, startNode);
+
+        while(frontier.Count > 0 && isRunning)
+        {
+            currentSearchNode = frontier.Dequeue();
+            currentSearchNode.isExplored = true;
+            ExploreNeighbors();
+            if(currentSearchNode.coordinates == endCoordinantes)
+            {
+                isRunning = false;
+            }
+        }
     }
 }
